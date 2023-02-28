@@ -13,7 +13,7 @@ class DBHelper {
           'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, price REAL)',
         );
         await db.execute(
-            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, invoice_number TEXT NOT NULL, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL,is_deleted INTEGER NOT NULL DEFAULT 0)');
+            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL,is_deleted INTEGER NOT NULL DEFAULT 0)');
       },
       version: 1,
     );
@@ -30,7 +30,6 @@ class DBHelper {
 
   static Future<void> insertInvoice(
     String id,
-    String invoiceNumber,
     double totalPrice,
     int dateTime,
     List<String> productTitles,
@@ -46,12 +45,11 @@ class DBHelper {
         productQuantities.map((q) => q.toString()).join(',');
     await db.rawInsert('''
     INSERT INTO invoices (
-      id, invoice_number, total_price, datetime,
+      id, total_price, datetime,
       product_titles, product_prices, product_quantities, is_deleted
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
   ''', [
       id,
-      invoiceNumber,
       totalPrice,
       dateTime,
       productTitlesString,
@@ -85,17 +83,5 @@ class DBHelper {
       {String? where, List<dynamic>? whereArgs}) async {
     final db = await DBHelper.database();
     return db.query(table, where: where, whereArgs: whereArgs);
-  }
-
-  static Future<Map<String, dynamic>?> getInvoiceByNumber(
-      String invoiceNumber) async {
-    final db = await DBHelper.database();
-    final List<Map<String, dynamic>> result = await db.query(
-      'invoices',
-      where: 'invoice_number = ?',
-      whereArgs: [invoiceNumber],
-      limit: 1,
-    );
-    return result.isNotEmpty ? result.first : null;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './providers/products_provider.dart';
+import 'package:flutter/services.dart';
 
 import 'config/app_router.dart';
 import 'config/theme.dart';
@@ -10,6 +11,10 @@ import 'config/theme.dart';
 import 'screens/screens.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+
   runApp(const MyApp());
 }
 

@@ -24,7 +24,6 @@ class Invoices with ChangeNotifier {
   ) async {
     final newInvoice = Invoice(
       id: id,
-      invoiceNumber: id,
       totalPrice: totalInvoicePrice,
       dateTime: DateTime.now().millisecondsSinceEpoch,
       productTitles: productTitles,
@@ -37,7 +36,6 @@ class Invoices with ChangeNotifier {
 
     await DBHelper.insertInvoice(
       id,
-      newInvoice.invoiceNumber,
       newInvoice.totalPrice,
       newInvoice.dateTime,
       productTitles,

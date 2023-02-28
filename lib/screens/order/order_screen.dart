@@ -31,7 +31,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _quantityController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final dateTimeFormatter = NumberFormat('00');
-  final now = DateTime.now().millisecondsSinceEpoch; // convert to seconds
+  final now = DateTime.now().millisecondsSinceEpoch;
 
   List<Order> orders = [];
 
@@ -111,8 +111,9 @@ class _OrderScreenState extends State<OrderScreen> {
         totalInvoicePrice,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('فاکتور با موفقیت ساخته شد'),
+        SnackBar(
+          backgroundColor: Colors.green[300],
+          content: const Text('فاکتور با موفقیت ساخته شد'),
         ),
       );
     } catch (error) {

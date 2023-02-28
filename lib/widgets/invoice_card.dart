@@ -41,13 +41,11 @@ class InvoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-
     return Card(
-      margin:
-          const EdgeInsets.only(top: 5.0, bottom: 15.0, left: 8.0, right: 8.0),
-      elevation: 5,
-      color: Colors.amber[50],
+      margin: const EdgeInsets.only(
+          top: 0.0, bottom: 25.0, left: 300.0, right: 300.0),
+      elevation: 10,
+      color: Colors.white,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
         padding: const EdgeInsets.only(
