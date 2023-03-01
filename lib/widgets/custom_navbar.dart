@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/screens/screens.dart';
+import 'package:mousavi/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavBar extends StatelessWidget {

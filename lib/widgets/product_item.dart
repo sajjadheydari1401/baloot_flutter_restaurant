@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/models/product_model.dart';
+import 'package:mousavi/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

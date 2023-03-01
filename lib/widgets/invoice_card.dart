@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/helpers/format.dart';
-import 'package:ecommerce_app/models/order_model.dart';
+import 'package:mousavi/helpers/format.dart';
+import 'package:mousavi/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +43,7 @@ class InvoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(
-          top: 0.0, bottom: 25.0, left: 300.0, right: 300.0),
+          top: 0.0, bottom: 25.0, left: 200.0, right: 200.0),
       elevation: 10,
       color: Colors.white,
       child: Container(
