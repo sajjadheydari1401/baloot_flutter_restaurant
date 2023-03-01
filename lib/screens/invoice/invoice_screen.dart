@@ -2,9 +2,13 @@ import 'package:ecommerce_app/models/invoice_model.dart';
 import 'package:ecommerce_app/models/order_model.dart';
 import 'package:ecommerce_app/providers/invoices_provider.dart';
 import 'package:ecommerce_app/widgets/widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:printing/printing.dart';
+import 'dart:ui' as ui;
 
 class InvoiceScreen extends StatefulWidget {
   static const routeName = '/invoice';
@@ -236,17 +240,57 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 }
 
 Widget _buildInvoiceCard(Invoice invoice) {
+  final GlobalKey key = GlobalKey();
+
   final orders = invoice.productTitles.asMap().entries.map((entry) {
     final index = entry.key;
     return Order(
       title: entry.value,
       qty: invoice.productQuantities[index],
       fee: invoice.productPrices[index],
-      totalFee: invoice.totalPrice,
+      totalFee: invoice.productQuantities[index] * invoice.productPrices[index],
     );
   }).toList();
-  return InvoiceCard(
-    orders: orders,
-    dateTime: invoice.dateTime,
+
+  return RepaintBoundary(
+    key: key,
+    child: GestureDetector(
+      onLongPress: () async {
+        final imageBytes = await _captureImageBytes(key);
+        if (imageBytes != null) {
+          await _shareImageBytes(imageBytes);
+        } else {
+          // handle error
+        }
+      },
+      child: InvoiceCard(
+        orders: orders,
+        dateTime: invoice.dateTime,
+      ),
+    ),
   );
+}
+
+Future<Uint8List?> _captureImageBytes(GlobalKey key) async {
+  RenderRepaintBoundary? boundary;
+  if (key.currentContext != null) {
+    boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
+  }
+  if (boundary != null) {
+    ui.Image? image = await boundary.toImage(pixelRatio: 3.0);
+    if (image != null) {
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      return byteData?.buffer.asUint8List();
+    }
+  }
+  return null;
+}
+
+Future<void> _shareImageBytes(Uint8List bytes) async {
+  try {
+    await Printing.sharePdf(bytes: bytes, filename: 'invoice.png');
+  } catch (e) {
+    print(e);
+  }
 }
