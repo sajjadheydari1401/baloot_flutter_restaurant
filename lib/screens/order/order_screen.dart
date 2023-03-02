@@ -28,7 +28,6 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final _quantityController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   final dateTimeFormatter = NumberFormat('00');
   final now = DateTime.now().millisecondsSinceEpoch;
 
@@ -88,17 +87,39 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {});
   }
 
-  Future<void> _saveInvoice(BuildContext context) async {
-    if (!_formKey.currentState!.validate()) {
+  void _decreaseOrderQty(String title) {
+    int index = orders.indexWhere((order) => order.title == title);
+
+    if (index == -1) {
       return;
     }
 
+    Order order = orders[index];
+
+    if (order.qty == 1) {
+      orders.removeAt(index);
+    } else {
+      order.qty = order.qty! - 1; // Add null check
+      order.totalFee = order.qty! * order.fee;
+      orders[index] = order;
+    }
+
+    // Update the UI
+    setState(() {});
+  }
+
+  int _getOrderQty(String title) {
+    final order = orders.firstWhere((order) => order.title == title,
+        orElse: () => Order(title: title, fee: 0.0, qty: 0));
+    return order.qty!;
+  }
+
+  Future<void> _saveInvoice(BuildContext context) async {
     final productTitles = orders.map((order) => order.title).toList();
     final productPrices = orders.map((order) => order.fee).toList();
     final productQuantities = orders.map((order) => order.qty).toList();
     final totalInvoicePrice =
         orders.fold<double>(0, (sum, order) => sum + order.totalFee);
-
     try {
       await Provider.of<Invoices>(context, listen: false).addInvoice(
         const Uuid().v4(),
@@ -189,9 +210,10 @@ class _OrderScreenState extends State<OrderScreen> {
                   // Create a Container widget with the appropriate color
                   return GestureDetector(
                     onTap: () => _addToOrders(products.items[index]),
-                    child: Stack(
+                    child: Column(
                       children: [
                         Container(
+                          height: 110,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: color,
@@ -199,50 +221,55 @@ class _OrderScreenState extends State<OrderScreen> {
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 products.items[index].title,
-                                style: const TextStyle(fontSize: 18),
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              if (orders.any((order) =>
-                                  order.title == products.items[index].title))
-                                Text(
-                                  '${orders.firstWhere((order) => order.title == products.items[index].title).qty}',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              if (_getOrderQty(products.items[index].title) > 0)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.remove),
+                                      onPressed: () => _decreaseOrderQty(
+                                          products.items[index].title),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(50),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black38,
+                                            blurRadius: 5,
+                                            offset: Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: Text(
+                                        '${_getOrderQty(products.items[index].title)}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () =>
+                                          _addToOrders(products.items[index]),
+                                    ),
+                                  ],
+                                )
                             ],
                           ),
                         ),
-                        if (orders.any((order) =>
-                            order.title == products.items[index].title))
-                          Positioned(
-                            right: 5,
-                            bottom: 5,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(50),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black38,
-                                    blurRadius: 5,
-                                    offset: Offset(1, 1),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(4),
-                              child: Text(
-                                '${orders.firstWhere((order) => order.title == products.items[index].title).qty}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                   );
