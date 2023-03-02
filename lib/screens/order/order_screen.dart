@@ -64,30 +64,28 @@ class _OrderScreenState extends State<OrderScreen> {
     super.didChangeDependencies();
   }
 
-  void _addItem(BuildContext context) {
-    if (!_formKey.currentState!.validate()) {
-      return;
+  void _addToOrders(product) {
+    // Check if the item is already in the orders list
+    int index = orders.indexWhere((order) => order.title == product.title);
+
+    if (index == -1) {
+      // If the item is not in the orders list, add it
+      orders.add(Order(
+        title: product.title,
+        fee: product.price,
+        qty: 1,
+        totalFee: product.price,
+      ));
+    } else {
+      // If the item is already in the orders list, update the quantity and total fee
+      Order order = orders[index];
+      order.qty = (order.qty ?? 0) + 1;
+      order.totalFee = (order.qty ?? 0) * order.fee;
+      orders[index] = order;
     }
 
-    final selectedProduct = Provider.of<Products>(context, listen: false)
-        .findById(_selectedProductId!);
-
-    if (selectedProduct != null) {
-      final order = Order(
-        totalFee: selectedProduct.price * int.parse(_quantityController.text),
-        fee: selectedProduct.price,
-        qty: int.parse(_quantityController.text),
-        title: selectedProduct.title,
-      );
-      orders.add(order);
-    }
-
-    _quantityController.clear();
-
-    setState(() {
-      _selectedProductId = null;
-      _isButtonEnabled = false;
-    });
+    // Update the UI
+    setState(() {});
   }
 
   Future<void> _saveInvoice(BuildContext context) async {
@@ -159,56 +157,101 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    DropdownButtonFormField<String>(
-                      value: _selectedProductId,
-                      items: products.items.map((product) {
-                        return DropdownMenuItem<String>(
-                          value: product.id,
-                          child: Text(product.title),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(
-                        labelText: 'انتخاب مورد',
-                      ),
-                      onChanged: (selectedProductId) {
-                        setState(() {
-                          _selectedProductId = selectedProductId;
-                          _isButtonEnabled = isButtonEnabled();
-                        });
-                      },
-                    ),
-                    TextFormField(
-                      controller: _quantityController,
-                      onChanged: (value) {
-                        setState(() {
-                          _isButtonEnabled = isButtonEnabled();
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'تعداد'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed:
-                          isButtonEnabled() ? () => _addItem(context) : null,
-                      child: const Text('افزودن'),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () =>
-                          orders.isNotEmpty ? _saveInvoice(context) : null,
-                      child: const Text('چاپ رسید'),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+              // implement GridView.builder
+              child: GridView.builder(
+                shrinkWrap: true, // to allow scrolling inside the GridView
+                physics:
+                    NeverScrollableScrollPhysics(), // to disable GridView scrolling
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: MediaQuery.of(context).size.width / 5,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
                 ),
+                itemCount: products.items.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  // Calculate the row number based on the item index
+                  int row = index ~/ 5;
+
+                  // Generate a list of colors to use for each row
+                  List<Color> rowColors = const [
+                    Color(0xfffdfd96),
+                    Color(0xff77dd77),
+                    Color(0xffff6961),
+                    Color(0xff84b6f4),
+                  ];
+
+                  // Get the color to use for the current row
+                  Color color = rowColors[row % rowColors.length];
+
+                  // Create a Container widget with the appropriate color
+                  return GestureDetector(
+                    onTap: () => _addToOrders(products.items[index]),
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                products.items[index].title,
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              if (orders.any((order) =>
+                                  order.title == products.items[index].title))
+                                Text(
+                                  '${orders.firstWhere((order) => order.title == products.items[index].title).qty}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (orders.any((order) =>
+                            order.title == products.items[index].title))
+                          Positioned(
+                            right: 5,
+                            bottom: 5,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(50),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 5,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                '${orders.firstWhere((order) => order.title == products.items[index].title).qty}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
               ),
+            ),
+            ElevatedButton(
+              onPressed: () => orders.isNotEmpty ? _saveInvoice(context) : null,
+              child: const Text('چاپ رسید'),
             ),
             const SizedBox(
               height: 20,

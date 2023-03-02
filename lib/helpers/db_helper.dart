@@ -34,7 +34,7 @@ class DBHelper {
     int dateTime,
     List<String> productTitles,
     List<double> productPrices,
-    List<int> productQuantities,
+    List<int?> productQuantities,
     int isDeleted,
   ) async {
     final db = await DBHelper.database();

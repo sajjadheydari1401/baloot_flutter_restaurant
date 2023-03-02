@@ -19,7 +19,7 @@ class Invoices with ChangeNotifier {
     String id,
     List<String> productTitles,
     List<double> productPrices,
-    List<int> productQuantities,
+    List<int?> productQuantities,
     double totalInvoicePrice,
   ) async {
     final newInvoice = Invoice(
