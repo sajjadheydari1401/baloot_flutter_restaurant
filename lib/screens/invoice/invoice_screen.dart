@@ -266,6 +266,7 @@ Widget _buildInvoiceCard(Invoice invoice) {
       child: InvoiceCard(
         orders: orders,
         dateTime: invoice.dateTime,
+        tableNumber: invoice.tableNumber ?? 0,
       ),
     ),
   );

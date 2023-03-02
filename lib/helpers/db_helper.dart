@@ -1,4 +1,3 @@
-import 'package:mousavi/models/models.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
@@ -13,7 +12,7 @@ class DBHelper {
           'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, price REAL)',
         );
         await db.execute(
-            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL,is_deleted INTEGER NOT NULL DEFAULT 0)');
+            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL, table_number INTEGER NOT NULL DEFAULT 0, is_deleted INTEGER NOT NULL DEFAULT 0)');
       },
       version: 1,
     );
@@ -36,6 +35,7 @@ class DBHelper {
     List<double> productPrices,
     List<int?> productQuantities,
     int isDeleted,
+    int tableNumber,
   ) async {
     final db = await DBHelper.database();
     final productTitlesString = productTitles.join(',');
@@ -46,8 +46,8 @@ class DBHelper {
     await db.rawInsert('''
     INSERT INTO invoices (
       id, total_price, datetime,
-      product_titles, product_prices, product_quantities, is_deleted
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      product_titles, product_prices, product_quantities, table_number, is_deleted
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   ''', [
       id,
       totalPrice,
@@ -55,6 +55,7 @@ class DBHelper {
       productTitlesString,
       productPricesString,
       productQuantitiesString,
+      tableNumber,
       isDeleted,
     ]);
   }

@@ -1,6 +1,5 @@
 import 'package:mousavi/models/invoice_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:uuid/uuid.dart';
 
 import '../helpers/db_helper.dart';
 
@@ -21,6 +20,7 @@ class Invoices with ChangeNotifier {
     List<double> productPrices,
     List<int?> productQuantities,
     double totalInvoicePrice,
+    int? tableNumber,
   ) async {
     final newInvoice = Invoice(
       id: id,
@@ -30,6 +30,7 @@ class Invoices with ChangeNotifier {
       productPrices: productPrices,
       productQuantities: productQuantities,
       isDeleted: 0,
+      tableNumber: tableNumber ?? 0,
     );
     _items.add(newInvoice);
     notifyListeners();
@@ -42,6 +43,7 @@ class Invoices with ChangeNotifier {
       productPrices,
       productQuantities,
       0,
+      tableNumber ?? 0,
     );
   }
 

@@ -6,11 +6,16 @@ import 'package:intl/intl.dart';
 class InvoiceCard extends StatelessWidget {
   final List<Order> orders;
   final int dateTime;
+  final int tableNumber;
 
   final dateTimeFormatter = NumberFormat('00');
   final _persianNumber = NumberFormat.decimalPattern('fa-IR');
 
-  InvoiceCard({super.key, required this.orders, required this.dateTime});
+  InvoiceCard(
+      {super.key,
+      required this.orders,
+      required this.dateTime,
+      required this.tableNumber});
 
   TableRow _getDataRow(Order order) {
     return TableRow(
@@ -88,6 +93,27 @@ class InvoiceCard extends StatelessWidget {
                 ),
               ],
             ),
+            (tableNumber == 0)
+                ? SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        tableNumber.toString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Text(
+                        ': شماره تخت',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

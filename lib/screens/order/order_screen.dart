@@ -27,13 +27,12 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final _quantityController = TextEditingController();
+  final _tableNumberController = TextEditingController();
   final dateTimeFormatter = NumberFormat('00');
   final now = DateTime.now().millisecondsSinceEpoch;
 
   List<Order> orders = [];
 
-  bool? _isButtonEnabled;
   String? _selectedProductId;
   bool _isInit = true;
   bool _isLoading = false;
@@ -41,7 +40,6 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     super.initState();
-    _isButtonEnabled = false;
   }
 
   @override
@@ -56,7 +54,6 @@ class _OrderScreenState extends State<OrderScreen> {
       ]);
       setState(() {
         _isLoading = false;
-        _isButtonEnabled = true;
       });
     }
     _isInit = false;
@@ -115,6 +112,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future<void> _saveInvoice(BuildContext context) async {
+    final tableNumber = _tableNumberController.text;
     final productTitles = orders.map((order) => order.title).toList();
     final productPrices = orders.map((order) => order.fee).toList();
     final productQuantities = orders.map((order) => order.qty).toList();
@@ -127,6 +125,7 @@ class _OrderScreenState extends State<OrderScreen> {
         productPrices,
         productQuantities,
         totalInvoicePrice,
+        tableNumber.isNotEmpty ? int.parse(tableNumber) : 0,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -144,7 +143,7 @@ class _OrderScreenState extends State<OrderScreen> {
       return;
     }
 
-    _quantityController.clear();
+    _tableNumberController.clear();
     setState(() {
       _selectedProductId = null;
     });
@@ -159,10 +158,6 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  bool isButtonEnabled() {
-    return _selectedProductId != null && _quantityController.text.isNotEmpty;
-  }
-
   void _removeOrderItem(String orderId) {
     // to do
   }
@@ -170,6 +165,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Products>(context);
+    final invoices = Provider.of<Invoices>(context, listen: false).items;
 
     return Scaffold(
       appBar: const CustomAppBar(title: ' ثبت سفارش'),
@@ -179,12 +175,12 @@ class _OrderScreenState extends State<OrderScreen> {
           children: [
             Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+                  const EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
               // implement GridView.builder
               child: GridView.builder(
                 shrinkWrap: true, // to allow scrolling inside the GridView
                 physics:
-                    NeverScrollableScrollPhysics(), // to disable GridView scrolling
+                    const NeverScrollableScrollPhysics(), // to disable GridView scrolling
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: MediaQuery.of(context).size.width / 5,
                   childAspectRatio: 3 / 2,
@@ -233,11 +229,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.remove),
+                                      icon: const Icon(Icons.remove),
                                       onPressed: () => _decreaseOrderQty(
                                           products.items[index].title),
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -261,7 +257,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     IconButton(
-                                      icon: Icon(Icons.add),
+                                      icon: const Icon(Icons.add),
                                       onPressed: () =>
                                           _addToOrders(products.items[index]),
                                     ),
@@ -276,6 +272,16 @@ class _OrderScreenState extends State<OrderScreen> {
                 },
               ),
             ),
+            TextField(
+              controller: _tableNumberController,
+              textAlign: TextAlign.right,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: ' (اختیاری)  شماره تخت را وارد کنید ',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () => orders.isNotEmpty ? _saveInvoice(context) : null,
               child: const Text('چاپ رسید'),
@@ -290,6 +296,9 @@ class _OrderScreenState extends State<OrderScreen> {
                 : InvoiceCard(
                     orders: orders,
                     dateTime: DateTime.now().millisecondsSinceEpoch,
+                    tableNumber: _tableNumberController.text.isNotEmpty
+                        ? int.parse(_tableNumberController.text)
+                        : 0,
                   ),
           ],
         ),
