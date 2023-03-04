@@ -62,12 +62,35 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   void filterInvoices() {
     final invoices = Provider.of<Invoices>(context, listen: false).items;
 
-    if (toLabel == 'انتخاب تاریخ' && fromLabel == 'انتخاب تاریخ') {
+    if (toLabel == 'انتخاب تاریخ' || fromLabel == 'انتخاب تاریخ') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'انتخاب تمامی فیلد ها الزامیست',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
       return;
     }
 
     DateTime grFromLabel = convertDatetime(fromLabel, 'toGregorian');
     DateTime grToLabel = convertDatetime(toLabel, 'toGregorian');
+
+    if (grToLabel.isBefore(grFromLabel)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'تاریخ انتها نباید از تاریخ ابتدا کمتر باشد',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+      setState(() {
+        toLabel = 'انتخاب تاریخ';
+      });
+      return;
+    }
 
     List<Invoice> filteredInvoices = invoices.where((invoice) {
       DateTime invoiceDateTime =
