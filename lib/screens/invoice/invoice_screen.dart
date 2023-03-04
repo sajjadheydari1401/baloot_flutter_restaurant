@@ -122,7 +122,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       body: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 10.0),
+            margin: const EdgeInsets.only(
+              bottom: 20.0,
+            ),
             padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
             color: Colors.cyan[100],
             child: Column(
@@ -214,6 +216,43 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     ),
                   ],
                 ),
+                ((toLabel == 'انتخاب تاریخ' || fromLabel == 'انتخاب تاریخ') ||
+                        invoicesToShow.isEmpty)
+                    ? const SizedBox()
+                    : Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            color: Colors.green[300],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  (formatPrice(invoicesToShow.fold<double>(0,
+                                          (sum, inv) => sum + inv.totalPrice)))
+                                      .toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Text(
+                                  ': فروش کل در این بازه (تومان)',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
               ],
             ),
           ),
