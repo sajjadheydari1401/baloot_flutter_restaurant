@@ -128,47 +128,83 @@ class _ProductScreenState extends State<ProductScreen> {
                   : Expanded(
                       child: ListView.builder(
                         itemCount: products.items.length,
-                        itemBuilder: (ctx, i) => Card(
-                          color: Colors.greenAccent,
-                          elevation: 5,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${formatPrice(products.items[i].price)} تومان',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        itemBuilder: (ctx, index) {
+                          final item = products.items[index];
+
+                          return Dismissible(
+                            key: Key(item.id),
+                            confirmDismiss: (direction) async {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('حذف محصول'),
+                                    content: Text(
+                                        'آیا مطمئن هستید که می‌خواهید ${item.title} را حذف کنید؟'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text('خیر'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text('بله'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            onDismissed: (direction) {
+                              _deleteProduct(products.items[index].id);
+                              // Then show a snackbar.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${item.title} حذف شد'),
                                 ),
-                                Row(
+                              );
+                            },
+                            child: Card(
+                              color: Colors.greenAccent,
+                              elevation: 5,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 5,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      products.items[i].title,
+                                      '${formatPrice(products.items[index].price)} تومان',
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () =>
-                                          _deleteProduct(products.items[i].id),
-                                      color: Theme.of(context).errorColor,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          products.items[index].title,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ),
+                    )
         ],
       ),
     );

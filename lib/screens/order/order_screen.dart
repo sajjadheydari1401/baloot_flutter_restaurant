@@ -33,7 +33,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   List<Order> orders = [];
 
-  String? _selectedProductId;
   bool _isInit = true;
   bool _isLoading = false;
 
@@ -144,9 +143,6 @@ class _OrderScreenState extends State<OrderScreen> {
     }
 
     _tableNumberController.clear();
-    setState(() {
-      _selectedProductId = null;
-    });
 
     orders.clear();
 
@@ -156,10 +152,6 @@ class _OrderScreenState extends State<OrderScreen> {
         builder: (ctx) => const InvoiceScreen(),
       ),
     );
-  }
-
-  void _removeOrderItem(String orderId) {
-    // to do
   }
 
   @override
