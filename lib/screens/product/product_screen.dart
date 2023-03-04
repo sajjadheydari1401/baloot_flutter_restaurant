@@ -51,11 +51,33 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   _saveProduct(BuildContext context) {
-    if (_titleController.text.isEmpty || _priceController.text.isEmpty) {
+    if (_titleController.text.trim().isEmpty ||
+        _priceController.text.trim().isEmpty) {
       return;
     }
-    Provider.of<Products>(context, listen: false)
-        .addProduct(_titleController.text, double.parse(_priceController.text));
+
+    final productsProvider = Provider.of<Products>(context, listen: false);
+    final existingProductIndex = productsProvider.items
+        .indexWhere((product) => product.title == _titleController.text.trim());
+    if (existingProductIndex != -1) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('خطا'),
+          content: const Text('غذایی با این عنوان قبلاً ثبت شده است.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('تأیید'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    productsProvider.addProduct(_titleController.text.trim(),
+        double.parse(_priceController.text.trim()));
     _titleController.clear();
     _priceController.clear();
   }
