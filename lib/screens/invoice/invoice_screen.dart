@@ -1,15 +1,12 @@
+import 'package:mousavi/helpers/file.dart';
 import 'package:mousavi/helpers/format.dart';
 import 'package:mousavi/models/invoice_model.dart';
 import 'package:mousavi/models/order_model.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
 import 'package:mousavi/widgets/widgets.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:printing/printing.dart';
-import 'dart:ui' as ui;
 
 class InvoiceScreen extends StatefulWidget {
   static const routeName = '/invoice';
@@ -301,11 +298,11 @@ Widget _buildInvoiceCard(Invoice invoice) {
     key: key,
     child: GestureDetector(
       onLongPress: () async {
-        final imageBytes = await _captureImageBytes(key);
+        final imageBytes = await captureImageBytes(key);
         if (imageBytes != null) {
-          await _shareImageBytes(imageBytes);
+          await shareImageBytes(imageBytes);
         } else {
-          // handle error
+          print('imageBytes is null');
         }
       },
       child: InvoiceCard(
@@ -315,28 +312,4 @@ Widget _buildInvoiceCard(Invoice invoice) {
       ),
     ),
   );
-}
-
-Future<Uint8List?> _captureImageBytes(GlobalKey key) async {
-  RenderRepaintBoundary? boundary;
-  if (key.currentContext != null) {
-    boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary?;
-  }
-  if (boundary != null) {
-    ui.Image? image = await boundary.toImage(pixelRatio: 3.0);
-    if (image != null) {
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      return byteData?.buffer.asUint8List();
-    }
-  }
-  return null;
-}
-
-Future<void> _shareImageBytes(Uint8List bytes) async {
-  try {
-    await Printing.sharePdf(bytes: bytes, filename: 'invoice.png');
-  } catch (e) {
-    print(e);
-  }
 }

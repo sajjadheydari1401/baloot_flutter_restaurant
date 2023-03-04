@@ -1,3 +1,4 @@
+import 'package:mousavi/models/models.dart';
 import 'package:mousavi/models/order_model.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
 import 'package:mousavi/providers/products_provider.dart';
@@ -111,6 +112,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future<void> _saveInvoice(BuildContext context) async {
+    final invoiceId = const Uuid().v4();
     final tableNumber = _tableNumberController.text;
     final productTitles = orders.map((order) => order.title).toList();
     final productPrices = orders.map((order) => order.fee).toList();
@@ -119,7 +121,7 @@ class _OrderScreenState extends State<OrderScreen> {
         orders.fold<double>(0, (sum, order) => sum + order.totalFee);
     try {
       await Provider.of<Invoices>(context, listen: false).addInvoice(
-        const Uuid().v4(),
+        invoiceId,
         productTitles,
         productPrices,
         productQuantities,
@@ -149,7 +151,9 @@ class _OrderScreenState extends State<OrderScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (ctx) => const InvoiceScreen(),
+        builder: (ctx) => InvoicePrintScreen(
+          selectedInvoiceId: invoiceId,
+        ),
       ),
     );
   }
@@ -303,7 +307,9 @@ class _OrderScreenState extends State<OrderScreen> {
                         ignoring: orders.isEmpty,
                         child: ElevatedButton(
                           onPressed: orders.isNotEmpty
-                              ? () => _saveInvoice(context)
+                              ? () => _saveInvoice(
+                                    context,
+                                  )
                               : null,
                           child: const Text('چاپ رسید'),
                         ),
