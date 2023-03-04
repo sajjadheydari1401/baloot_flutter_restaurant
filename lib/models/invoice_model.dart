@@ -5,9 +5,7 @@ class Invoice {
   final List<String> productTitles;
   final List<double> productPrices;
   final List<dynamic> productQuantities;
-  final int isDeleted;
   final int? tableNumber;
-
 
   Invoice({
     required this.id,
@@ -16,7 +14,6 @@ class Invoice {
     required this.productTitles,
     required this.productPrices,
     required this.productQuantities,
-    required this.isDeleted,
     this.tableNumber,
   });
 
@@ -28,7 +25,6 @@ class Invoice {
       'productTitles': productTitles.join(','),
       'productPrices': productPrices.join(','),
       'productQuantities': productQuantities.join(','),
-      'is_deleted': isDeleted,
       'table_number': tableNumber,
     };
   }
@@ -49,7 +45,6 @@ class Invoice {
               .map((q) => int.parse(q))
               .toList() ??
           [],
-      isDeleted: map['is_deleted'] ?? 0,
       tableNumber: map['table_number'] ?? 0,
     );
   }
@@ -61,7 +56,6 @@ class Invoice {
     List<String>? productTitles,
     List<double>? productPrices,
     List<int>? productQuantities,
-    int? isDeleted,
     int? tableNumber,
   }) {
     return Invoice(
@@ -71,8 +65,7 @@ class Invoice {
       productTitles: productTitles ?? this.productTitles,
       productPrices: productPrices ?? this.productPrices,
       productQuantities: productQuantities ?? this.productQuantities,
-      isDeleted: isDeleted ?? this.isDeleted,
-      tableNumber: isDeleted ?? this.isDeleted,
+      tableNumber: tableNumber ?? this.tableNumber,
     );
   }
 }

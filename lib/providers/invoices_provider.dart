@@ -29,7 +29,6 @@ class Invoices with ChangeNotifier {
       productTitles: productTitles,
       productPrices: productPrices,
       productQuantities: productQuantities,
-      isDeleted: 0,
       tableNumber: tableNumber ?? 0,
     );
     _items.add(newInvoice);
@@ -42,21 +41,13 @@ class Invoices with ChangeNotifier {
       productTitles,
       productPrices,
       productQuantities,
-      0,
       tableNumber ?? 0,
     );
   }
 
-  Future<void> removeInvoice(String invoiceId) async {
-    await DBHelper.deleteInvoice('invoices', 'id = ?', [invoiceId]);
-    _items.removeWhere((invoice) => invoice.id == invoiceId);
-    notifyListeners();
-  }
-
   Future<void> fetchAndSetInvoices() async {
     try {
-      final dataList = await DBHelper.getData('invoices',
-          where: 'is_deleted = ?', whereArgs: [0]);
+      final dataList = await DBHelper.getData('invoices');
       final List<Invoice> loadedInvoices = await loadedInvoicesFuture(dataList);
       _items = loadedInvoices;
       notifyListeners();

@@ -104,7 +104,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       if (grFromLabel.isAfter(grToLabel)) {
         return false; // invalid date range
       } else if (invoiceDateTime.isBefore(grFromLabel) ||
-          invoiceDateTime.isAfter(grToLabel.add(Duration(days: 1)))) {
+          invoiceDateTime.isAfter(grToLabel.add(const Duration(days: 1)))) {
         return false; // outside the date range
       } else {
         return true;

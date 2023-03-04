@@ -12,7 +12,7 @@ class DBHelper {
           'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, price REAL)',
         );
         await db.execute(
-            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL, table_number INTEGER NOT NULL DEFAULT 0, is_deleted INTEGER NOT NULL DEFAULT 0)');
+            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL, table_number INTEGER NOT NULL DEFAULT 0)');
       },
       version: 1,
     );
@@ -34,7 +34,6 @@ class DBHelper {
     List<String> productTitles,
     List<double> productPrices,
     List<int?> productQuantities,
-    int isDeleted,
     int tableNumber,
   ) async {
     final db = await DBHelper.database();
@@ -46,8 +45,8 @@ class DBHelper {
     await db.rawInsert('''
     INSERT INTO invoices (
       id, total_price, datetime,
-      product_titles, product_prices, product_quantities, table_number, is_deleted
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      product_titles, product_prices, product_quantities, table_number
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
   ''', [
       id,
       totalPrice,
@@ -56,7 +55,6 @@ class DBHelper {
       productPricesString,
       productQuantitiesString,
       tableNumber,
-      isDeleted,
     ]);
   }
 
@@ -66,17 +64,6 @@ class DBHelper {
       'products',
       where: 'id = ?',
       whereArgs: [productId],
-    );
-  }
-
-  static Future<void> deleteInvoice(
-      String invoiceId, String s, List<String> list) async {
-    final db = await DBHelper.database();
-    await db.update(
-      'invoices',
-      {'is_deleted': 1},
-      where: 'id = ?',
-      whereArgs: [invoiceId],
     );
   }
 
