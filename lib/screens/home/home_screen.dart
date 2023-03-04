@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mousavi/widgets/widgets.dart';
+import 'package:persian_fonts/persian_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/';
@@ -16,10 +17,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+      textStyle: PersianFonts.Vazir.copyWith(
+          fontSize: 20, fontWeight: FontWeight.bold),
+    );
     return Scaffold(
         appBar: const CustomAppBar(title: 'رستوران موسوی'),
-        bottomNavigationBar: const CustomNavBar(),
+        bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

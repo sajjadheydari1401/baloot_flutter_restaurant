@@ -9,7 +9,6 @@ class InvoiceCard extends StatelessWidget {
   final int tableNumber;
 
   final dateTimeFormatter = NumberFormat('00');
-  final _persianNumber = NumberFormat.decimalPattern('fa-IR');
 
   InvoiceCard(
       {super.key,
@@ -26,7 +25,7 @@ class InvoiceCard extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         Text(
-          _persianNumber.format(order.qty).toString(),
+          replaceFarsiNumber(order.qty.toString()),
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
           textAlign: TextAlign.center,
         ),
@@ -78,7 +77,9 @@ class InvoiceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${getJalaliDateTime(dateTime).year}/${dateTimeFormatter.format(getJalaliDateTime(dateTime).month)}/${dateTimeFormatter.format(getJalaliDateTime(dateTime).day)} ${dateTimeFormatter.format(getJalaliDateTime(dateTime).hour)}:${dateTimeFormatter.format(getJalaliDateTime(dateTime).minute)}',
+                  replaceFarsiNumber(
+                    '${getJalaliDateTime(dateTime).year}/${dateTimeFormatter.format(getJalaliDateTime(dateTime).month)}/${dateTimeFormatter.format(getJalaliDateTime(dateTime).day)} ${dateTimeFormatter.format(getJalaliDateTime(dateTime).hour)}:${dateTimeFormatter.format(getJalaliDateTime(dateTime).minute)}',
+                  ),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -94,12 +95,12 @@ class InvoiceCard extends StatelessWidget {
               ],
             ),
             (tableNumber == 0)
-                ? SizedBox()
+                ? const SizedBox()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        tableNumber.toString(),
+                        replaceFarsiNumber(tableNumber.toString()),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -203,15 +204,15 @@ class InvoiceCard extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
-                  '09151231245',
-                  style: TextStyle(
+                  replaceFarsiNumber('09151231245'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   ': تلفن',
                   style: TextStyle(
                     fontSize: 18,

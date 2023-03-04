@@ -157,144 +157,175 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Products>(context);
-    final invoices = Provider.of<Invoices>(context, listen: false).items;
 
     return Scaffold(
       appBar: const CustomAppBar(title: ' ثبت سفارش'),
-      bottomNavigationBar: const CustomNavBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
-              // implement GridView.builder
-              child: GridView.builder(
-                shrinkWrap: true, // to allow scrolling inside the GridView
-                physics:
-                    const NeverScrollableScrollPhysics(), // to disable GridView scrolling
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: MediaQuery.of(context).size.width / 5,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                ),
-                itemCount: products.items.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  // Calculate the row number based on the item index
-                  int row = index ~/ 5;
-
-                  // Generate a list of colors to use for each row
-                  List<Color> rowColors = const [
-                    Color(0xfffdfd96),
-                    Color(0xff77dd77),
-                    Color(0xffff6961),
-                    Color(0xff84b6f4),
-                  ];
-
-                  // Get the color to use for the current row
-                  Color color = rowColors[row % rowColors.length];
-
-                  // Create a Container widget with the appropriate color
-                  return GestureDetector(
-                    onTap: () => _addToOrders(products.items[index]),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 110,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                products.items[index].title,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              if (_getOrderQty(products.items[index].title) > 0)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.remove),
-                                      onPressed: () => _decreaseOrderQty(
-                                          products.items[index].title),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black38,
-                                            blurRadius: 5,
-                                            offset: Offset(1, 1),
-                                          ),
-                                        ],
-                                      ),
-                                      padding: const EdgeInsets.all(4),
-                                      child: Text(
-                                        '${_getOrderQty(products.items[index].title)}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () =>
-                                          _addToOrders(products.items[index]),
-                                    ),
-                                  ],
-                                )
-                            ],
-                          ),
-                        ),
-                      ],
+      bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : products.items.isEmpty
+              ? const Center(
+                  child: Text(
+                    'غذایی ثبت نشده',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
-              ),
-            ),
-            TextField(
-              controller: _tableNumberController,
-              textAlign: TextAlign.right,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: ' (اختیاری)  شماره تخت را وارد کنید ',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => orders.isNotEmpty ? _saveInvoice(context) : null,
-              child: const Text('چاپ رسید'),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : InvoiceCard(
-                    orders: orders,
-                    dateTime: DateTime.now().millisecondsSinceEpoch,
-                    tableNumber: _tableNumberController.text.isNotEmpty
-                        ? int.parse(_tableNumberController.text)
-                        : 0,
                   ),
-          ],
-        ),
-      ),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 30.0, horizontal: 50.0),
+                        // implement GridView.builder
+                        child: GridView.builder(
+                          shrinkWrap:
+                              true, // to allow scrolling inside the GridView
+                          physics:
+                              const NeverScrollableScrollPhysics(), // to disable GridView scrolling
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent:
+                                MediaQuery.of(context).size.width / 5,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                          ),
+                          itemCount: products.items.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            // Calculate the row number based on the item index
+                            int row = index ~/ 5;
+
+                            // Generate a list of colors to use for each row
+                            List<Color> rowColors = const [
+                              Color(0xfffdfd96),
+                              Color(0xff77dd77),
+                              Color(0xffff6961),
+                              Color(0xff84b6f4),
+                            ];
+
+                            // Get the color to use for the current row
+                            Color color = rowColors[row % rowColors.length];
+
+                            // Create a Container widget with the appropriate color
+                            return GestureDetector(
+                              onTap: () => _addToOrders(products.items[index]),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 110,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          products.items[index].title,
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        if (_getOrderQty(
+                                                products.items[index].title) >
+                                            0)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.remove),
+                                                onPressed: () =>
+                                                    _decreaseOrderQty(products
+                                                        .items[index].title),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black38,
+                                                      blurRadius: 5,
+                                                      offset: Offset(1, 1),
+                                                    ),
+                                                  ],
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                child: Text(
+                                                  '${_getOrderQty(products.items[index].title)}',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              IconButton(
+                                                icon: const Icon(Icons.add),
+                                                onPressed: () => _addToOrders(
+                                                    products.items[index]),
+                                              ),
+                                            ],
+                                          )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      TextField(
+                        controller: _tableNumberController,
+                        textAlign: TextAlign.right,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: ' (اختیاری)  شماره تخت را وارد کنید ',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      IgnorePointer(
+                        ignoring: orders.isEmpty,
+                        child: ElevatedButton(
+                          onPressed: orders.isNotEmpty
+                              ? () => _saveInvoice(context)
+                              : null,
+                          child: const Text('چاپ رسید'),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : InvoiceCard(
+                              orders: orders,
+                              dateTime: DateTime.now().millisecondsSinceEpoch,
+                              tableNumber:
+                                  _tableNumberController.text.isNotEmpty
+                                      ? int.parse(_tableNumberController.text)
+                                      : 0,
+                            ),
+                    ],
+                  ),
+                ),
     );
   }
 }

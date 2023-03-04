@@ -1,3 +1,4 @@
+import 'package:mousavi/helpers/format.dart';
 import 'package:mousavi/models/invoice_model.dart';
 import 'package:mousavi/models/order_model.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
@@ -119,7 +120,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'فاکتورها'),
-      bottomNavigationBar: const CustomNavBar(),
+      bottomNavigationBar: CustomNavBar(currentTabIndex: 1),
       body: Column(
         children: [
           Container(
@@ -135,7 +136,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       onPressed: () {
                         filterInvoices();
                       },
-                      child: const Text('جستجو'),
+                      child: const Text(
+                        'جستجو',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       width: 50,
@@ -155,9 +162,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                         }
                       },
                       child: Text(
-                        toLabel,
+                        replaceFarsiNumber(toLabel),
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -168,7 +175,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     const Text(
                       ': تا تاریخ',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -190,9 +197,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                         }
                       },
                       child: Text(
-                        fromLabel,
+                        replaceFarsiNumber(fromLabel),
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -203,7 +210,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     const Text(
                       ': فاکتورهای ثبت شده از تاریخ',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

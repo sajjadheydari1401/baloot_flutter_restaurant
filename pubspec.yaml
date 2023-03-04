@@ -43,6 +43,7 @@ dependencies:
   uuid: ^3.0.7
   persian_datetime_picker: ^2.5.0
   printing: ^5.9.3
+  persian_fonts: ^1.0.5
 
 dev_dependencies:
   flutter_test:

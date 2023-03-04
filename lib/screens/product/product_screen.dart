@@ -95,7 +95,7 @@ class _ProductScreenState extends State<ProductScreen> {
     final products = Provider.of<Products>(context);
     return Scaffold(
       appBar: const CustomAppBar(title: 'افزودن غذا'),
-      bottomNavigationBar: const CustomNavBar(),
+      bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
       body: Column(
         children: [
           Padding(
@@ -127,10 +127,13 @@ class _ProductScreenState extends State<ProductScreen> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed:
-                        isFormValid() ? () => _saveProduct(context) : null,
-                    child: const Text('ذخیره'),
+                  IgnorePointer(
+                    ignoring: !isFormValid(),
+                    child: ElevatedButton(
+                      onPressed:
+                          isFormValid() ? () => _saveProduct(context) : null,
+                      child: const Text('چاپ رسید'),
+                    ),
                   ),
                 ],
               ),
@@ -145,7 +148,13 @@ class _ProductScreenState extends State<ProductScreen> {
                 )
               : products.items.isEmpty
                   ? const Center(
-                      child: Text('غذایی ثبت نشده'),
+                      child: Text(
+                        'غذایی ثبت نشده',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     )
                   : Expanded(
                       child: ListView.builder(

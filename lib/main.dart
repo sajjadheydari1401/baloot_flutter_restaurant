@@ -1,12 +1,12 @@
 import 'package:mousavi/providers/invoices_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:persian_fonts/persian_fonts.dart';
 import 'package:provider/provider.dart';
 
 import './providers/products_provider.dart';
 import 'package:flutter/services.dart';
 
 import 'config/app_router.dart';
-import 'config/theme.dart';
 
 import 'screens/screens.dart';
 
@@ -30,7 +30,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: theme(),
+        theme: ThemeData(
+          textTheme: PersianFonts.vazirTextTheme,
+        ),
         onGenerateRoute: AppRouter.onGenerateRoute,
         initialRoute: HomeScreen.routeName,
       ),
