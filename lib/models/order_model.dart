@@ -1,17 +1,17 @@
 class Order {
   final String title;
   final double fee;
-  int? qty;
+  String qty;
   late double totalFee;
 
   Order({
-    double totalFee = 0.0,
+    this.totalFee = 0.0,
     required this.fee,
     required this.qty,
     required this.title,
-  }) : totalFee = totalFee;
+  });
 
   void updateTotalFee() {
-    totalFee = fee * qty!;
+    totalFee = fee * int.parse(qty);
   }
 }

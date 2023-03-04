@@ -21,3 +21,28 @@ String replaceFarsiNumber(String input) {
 
   return input;
 }
+
+DateTime convertDatetime(String datetime, String outputCalendar) {
+  List<String> datetimeParts = datetime.split(' ');
+  List<String> dateParts = datetimeParts[0].split('-');
+  int year = int.parse(dateParts[0]);
+  int month = int.parse(dateParts[1]);
+  int day = int.parse(dateParts[2]);
+  int hour = int.parse(datetimeParts[1].split(':')[0]);
+  int minute = int.parse(datetimeParts[1].split(':')[1]);
+  int second = int.parse(datetimeParts[1].split(':')[2]);
+
+  if (outputCalendar == 'toGregorian') {
+    return Jalali(year, month, day)
+        .toGregorian()
+        .toDateTime()
+        .add(Duration(hours: hour, minutes: minute, seconds: second));
+  } else if (outputCalendar == 'toJalali') {
+    return Gregorian(year, month, day)
+        .toJalali()
+        .toDateTime()
+        .add(Duration(hours: hour, minutes: minute, seconds: second));
+  } else {
+    throw ArgumentError('Invalid outputCalendar parameter');
+  }
+}

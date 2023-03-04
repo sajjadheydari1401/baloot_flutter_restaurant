@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     );
     return Scaffold(
         appBar: const CustomAppBar(title: 'رستوران موسوی'),
-        bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
+        bottomNavigationBar: const CustomNavBar(currentTabIndex: 0),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

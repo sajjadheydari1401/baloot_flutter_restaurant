@@ -4,7 +4,7 @@ class Invoice {
   final int dateTime;
   final List<String> productTitles;
   final List<double> productPrices;
-  final List<dynamic> productQuantities;
+  final List<String> productQuantities;
   final int? tableNumber;
 
   Invoice({
@@ -40,11 +40,8 @@ class Invoice {
               .map((p) => double.parse(p))
               .toList() ??
           [],
-      productQuantities: (map['product_quantities'] as String?)
-              ?.split(',')
-              .map((q) => int.parse(q))
-              .toList() ??
-          [],
+      productQuantities:
+          (map['product_quantities'] as String?)?.split(',') ?? [],
       tableNumber: map['table_number'] ?? 0,
     );
   }
@@ -55,7 +52,7 @@ class Invoice {
     int? dateTime,
     List<String>? productTitles,
     List<double>? productPrices,
-    List<int>? productQuantities,
+    List<String>? productQuantities,
     int? tableNumber,
   }) {
     return Invoice(

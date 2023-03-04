@@ -95,7 +95,7 @@ class _ProductScreenState extends State<ProductScreen> {
     final products = Provider.of<Products>(context);
     return Scaffold(
       appBar: const CustomAppBar(title: 'افزودن غذا'),
-      bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
+      bottomNavigationBar: const CustomNavBar(currentTabIndex: 0),
       body: Column(
         children: [
           Padding(

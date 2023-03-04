@@ -18,7 +18,7 @@ class Invoices with ChangeNotifier {
     String id,
     List<String> productTitles,
     List<double> productPrices,
-    List<int?> productQuantities,
+    List<String> productQuantities,
     double totalInvoicePrice,
     int? tableNumber,
   ) async {

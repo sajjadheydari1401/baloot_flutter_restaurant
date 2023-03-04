@@ -43,18 +43,22 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    final dataList = await DBHelper.getData('products');
-    if (dataList != null) {
-      _items = dataList
-          .map(
-            (item) => Product(
-              id: item['id'],
-              title: item['title'],
-              price: item['price'],
-            ),
-          )
-          .toList();
-      notifyListeners();
+    try {
+      final dataList = await DBHelper.getData('products');
+      if (dataList != null) {
+        _items = dataList
+            .map(
+              (item) => Product(
+                id: item['id'],
+                title: item['title'],
+                price: item['price'],
+              ),
+            )
+            .toList();
+        notifyListeners();
+      }
+    } catch (error) {
+      print('Error fetching products: $error');
     }
   }
 }

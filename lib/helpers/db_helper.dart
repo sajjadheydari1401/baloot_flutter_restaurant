@@ -12,7 +12,7 @@ class DBHelper {
           'CREATE TABLE products(id TEXT PRIMARY KEY, title TEXT, price REAL)',
         );
         await db.execute(
-            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities INTEGER NOT NULL, table_number INTEGER NOT NULL DEFAULT 0)');
+            ' CREATE TABLE invoices( id TEXT PRIMARY KEY, total_price REAL NOT NULL, datetime INTEGER NOT NULL, product_titles TEXT NOT NULL, product_prices TEXT NOT NULL, product_quantities TEXT NOT NULL, table_number INTEGER NOT NULL DEFAULT 0)');
       },
       version: 1,
     );
@@ -33,7 +33,7 @@ class DBHelper {
     int dateTime,
     List<String> productTitles,
     List<double> productPrices,
-    List<int?> productQuantities,
+    List<String> productQuantities,
     int tableNumber,
   ) async {
     final db = await DBHelper.database();
@@ -42,20 +42,22 @@ class DBHelper {
         productPrices.map((p) => p.toString()).join(',');
     final productQuantitiesString =
         productQuantities.map((q) => q.toString()).join(',');
-    await db.rawInsert('''
-    INSERT INTO invoices (
-      id, total_price, datetime,
-      product_titles, product_prices, product_quantities, table_number
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)
-  ''', [
-      id,
-      totalPrice,
-      dateTime,
-      productTitlesString,
-      productPricesString,
-      productQuantitiesString,
-      tableNumber,
-    ]);
+
+    final data = {
+      'id': id,
+      'total_price': totalPrice,
+      'datetime': dateTime,
+      'product_titles': productTitlesString,
+      'product_prices': productPricesString,
+      'product_quantities': productQuantitiesString,
+      'table_number': tableNumber,
+    };
+
+    await db.insert(
+      'invoices',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   static Future<void> deleteProduct(String productId) async {

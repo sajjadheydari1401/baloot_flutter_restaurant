@@ -68,14 +68,14 @@ class _OrderScreenState extends State<OrderScreen> {
       orders.add(Order(
         title: product.title,
         fee: product.price,
-        qty: 1,
+        qty: '1',
         totalFee: product.price,
       ));
     } else {
       // If the item is already in the orders list, update the quantity and total fee
       Order order = orders[index];
-      order.qty = (order.qty ?? 0) + 1;
-      order.totalFee = (order.qty ?? 0) * order.fee;
+      order.qty = (int.parse(order.qty) + 1).toString();
+      order.totalFee = int.parse(order.qty) * order.fee;
       orders[index] = order;
     }
 
@@ -92,11 +92,11 @@ class _OrderScreenState extends State<OrderScreen> {
 
     Order order = orders[index];
 
-    if (order.qty == 1) {
+    if (order.qty == "1") {
       orders.removeAt(index);
     } else {
-      order.qty = order.qty! - 1; // Add null check
-      order.totalFee = order.qty! * order.fee;
+      order.qty = (int.parse(order.qty) - 1).toString(); // Add null check
+      order.totalFee = int.parse(order.qty) * order.fee;
       orders[index] = order;
     }
 
@@ -104,10 +104,10 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {});
   }
 
-  int _getOrderQty(String title) {
+  String _getOrderQty(String title) {
     final order = orders.firstWhere((order) => order.title == title,
-        orElse: () => Order(title: title, fee: 0.0, qty: 0));
-    return order.qty!;
+        orElse: () => Order(title: title, fee: 0.0, qty: '0'));
+    return order.qty;
   }
 
   Future<void> _saveInvoice(BuildContext context) async {
@@ -160,7 +160,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
     return Scaffold(
       appBar: const CustomAppBar(title: ' ثبت سفارش'),
-      bottomNavigationBar: CustomNavBar(currentTabIndex: 0),
+      bottomNavigationBar: const CustomNavBar(currentTabIndex: 0),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -235,8 +235,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        if (_getOrderQty(
-                                                products.items[index].title) >
+                                        if (int.parse(_getOrderQty(
+                                                products.items[index].title)) >
                                             0)
                                           Row(
                                             mainAxisAlignment:

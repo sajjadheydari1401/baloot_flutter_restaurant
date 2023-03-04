@@ -32,6 +32,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   bool _isLoading = false;
   String fromLabel = '';
   String toLabel = '';
+  String loadedContentLabel = 'لطفا بازه ی تاریخ ثبت فاکتور را مشخص کنید';
 
   List<Invoice> invoicesToShow = [];
 
@@ -45,7 +46,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    invoicesToShow = Provider.of<Invoices>(context, listen: true).items;
     if (_isInit) {
       setState(() {
         _isLoading = true;
@@ -59,38 +59,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     _isInit = false;
   }
 
-  DateTime convertDatetime(String datetime, String outputCalendar) {
-    List<String> datetimeParts = datetime.split(' ');
-    List<String> dateParts = datetimeParts[0].split('-');
-    int year = int.parse(dateParts[0]);
-    int month = int.parse(dateParts[1]);
-    int day = int.parse(dateParts[2]);
-    int hour = int.parse(datetimeParts[1].split(':')[0]);
-    int minute = int.parse(datetimeParts[1].split(':')[1]);
-    int second = int.parse(datetimeParts[1].split(':')[2]);
-
-    if (outputCalendar == 'toGregorian') {
-      return Jalali(year, month, day)
-          .toGregorian()
-          .toDateTime()
-          .add(Duration(hours: hour, minutes: minute, seconds: second));
-    } else if (outputCalendar == 'toJalali') {
-      return Gregorian(year, month, day)
-          .toJalali()
-          .toDateTime()
-          .add(Duration(hours: hour, minutes: minute, seconds: second));
-    } else {
-      throw ArgumentError('Invalid outputCalendar parameter');
-    }
-  }
-
   void filterInvoices() {
     final invoices = Provider.of<Invoices>(context, listen: false).items;
 
     if (toLabel == 'انتخاب تاریخ' && fromLabel == 'انتخاب تاریخ') {
-      setState(() {
-        invoicesToShow = invoices;
-      });
       return;
     }
 
@@ -113,6 +85,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
     setState(() {
       invoicesToShow = filteredInvoices;
+      if (filteredInvoices.isEmpty) {
+        loadedContentLabel = 'فاکتوری ثبت نشده';
+      }
     });
   }
 
@@ -120,7 +95,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'فاکتورها'),
-      bottomNavigationBar: CustomNavBar(currentTabIndex: 1),
+      bottomNavigationBar: const CustomNavBar(currentTabIndex: 1),
       body: Column(
         children: [
           Container(
@@ -223,10 +198,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             child: invoicesToShow.isEmpty
                 ? _isLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : const Center(
+                    : Center(
                         child: Text(
-                          'فاکتوری ثبت نشده',
-                          style: TextStyle(
+                          loadedContentLabel,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -255,7 +230,8 @@ Widget _buildInvoiceCard(Invoice invoice) {
       title: entry.value,
       qty: invoice.productQuantities[index],
       fee: invoice.productPrices[index],
-      totalFee: invoice.productQuantities[index] * invoice.productPrices[index],
+      totalFee: int.parse(invoice.productQuantities[index]) *
+          invoice.productPrices[index],
     );
   }).toList();
 
