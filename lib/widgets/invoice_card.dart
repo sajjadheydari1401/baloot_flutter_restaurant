@@ -47,7 +47,7 @@ class InvoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(
-          top: 0.0, bottom: 25.0, left: 200.0, right: 200.0),
+          top: 0.0, bottom: 25.0, left: 300.0, right: 300.0),
       elevation: 10,
       color: Colors.white,
       child: Container(
@@ -115,26 +115,6 @@ class InvoiceCard extends StatelessWidget {
                       ),
                     ],
                   ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  (formatPrice(orders.fold<double>(
-                      0, (sum, order) => sum + order.totalFee))).toString(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  ': مبلغ کل (تومان)',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(
               height: 10,
             ),
@@ -180,20 +160,46 @@ class InvoiceCard extends StatelessWidget {
                 ),
               ],
             ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    (formatPrice(orders.fold<double>(
+                        0, (sum, order) => sum + order.totalFee))).toString(),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    ': مبلغ کل (تومان)',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
-                  'پنجتن 41 -نبش خ 12',
-                  style: TextStyle(
+                  replaceFarsiNumber('پنجتن 41 -نبش خ 12'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                const Text(
                   ': آدرس',
                   style: TextStyle(
                     fontSize: 18,
@@ -217,6 +223,32 @@ class InvoiceCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Text(
+              'سفارش مجالس پذیرفته میشود',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  replaceFarsiNumber('09057302285'),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  ': نرم افزار بلوط',
+                  style: TextStyle(
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
