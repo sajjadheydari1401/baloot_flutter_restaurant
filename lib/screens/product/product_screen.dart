@@ -97,7 +97,7 @@ class _ProductScreenState extends State<ProductScreen> {
       appBar: const CustomAppBar(title: 'افزودن غذا'),
       bottomNavigationBar: const CustomNavBar(currentTabIndex: 0),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 500,
           child: SingleChildScrollView(
             child: SizedBox(
@@ -159,6 +159,9 @@ class _ProductScreenState extends State<ProductScreen> {
                             child: IgnorePointer(
                               ignoring: !isFormValid(),
                               child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff70e000),
+                                ),
                                 onPressed: isFormValid()
                                     ? () => _saveProduct(context)
                                     : null,
@@ -247,14 +250,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                         );
                                       },
                                       child: Card(
-                                        color: Colors.greenAccent,
+                                        color: const Color(0xff70e000),
                                         elevation: 5,
                                         margin: const EdgeInsets.symmetric(
                                           horizontal: 15,
                                           vertical: 5,
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(20.0),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -264,6 +267,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 style: const TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
+                                                  color: Color(0xff112A46),
                                                 ),
                                               ),
                                               Row(
@@ -274,6 +278,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      color: Color(0xff112A46),
                                                     ),
                                                   ),
                                                 ],

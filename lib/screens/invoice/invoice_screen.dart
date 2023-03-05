@@ -122,8 +122,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             margin: const EdgeInsets.only(
               bottom: 20.0,
             ),
-            padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-            color: Colors.cyan[100],
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+            // color: const Color(0xffccff33),
             child: Column(
               children: [
                 Row(
@@ -133,6 +133,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       onPressed: () {
                         filterInvoices();
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff70e000),
+                      ),
                       child: const Text(
                         'جستجو',
                         style: TextStyle(
@@ -145,6 +148,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       width: 50,
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff70e000),
+                      ),
                       onPressed: () async {
                         Jalali? picked = await showPersianDatePicker(
                           context: context,
@@ -180,6 +186,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       width: 30,
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff70e000),
+                      ),
                       onPressed: () async {
                         Jalali? picked = await showPersianDatePicker(
                           context: context,
@@ -222,7 +231,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                             height: 10,
                           ),
                           Container(
-                            color: Colors.green[300],
+                            color: const Color(0xff70e000),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

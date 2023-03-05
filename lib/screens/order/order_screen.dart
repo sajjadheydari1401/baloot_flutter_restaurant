@@ -303,6 +303,8 @@ class _OrderScreenState extends State<OrderScreen> {
                         height: 40,
                         width: 400,
                         child: TextField(
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                           controller: _tableNumberController,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
@@ -314,15 +316,26 @@ class _OrderScreenState extends State<OrderScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      IgnorePointer(
-                        ignoring: orders.isEmpty,
-                        child: ElevatedButton(
-                          onPressed: orders.isNotEmpty
-                              ? () => _saveInvoice(
-                                    context,
-                                  )
-                              : null,
-                          child: const Text('چاپ رسید'),
+                      SizedBox(
+                        width: 200,
+                        height: 50,
+                        child: IgnorePointer(
+                          ignoring: orders.isEmpty,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff70e000),
+                            ),
+                            onPressed: orders.isNotEmpty
+                                ? () => _saveInvoice(
+                                      context,
+                                    )
+                                : null,
+                            child: const Text(
+                              'چاپ رسید',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(

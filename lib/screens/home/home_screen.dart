@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xff70e000),
       textStyle: PersianFonts.Vazir.copyWith(
           fontSize: 20, fontWeight: FontWeight.bold),
     );

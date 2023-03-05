@@ -52,7 +52,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
       currentIndex: widget.currentTabIndex,
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white.withOpacity(0.6),
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color(0xff38b000),
       onTap: _onItemTapped,
     );
   }

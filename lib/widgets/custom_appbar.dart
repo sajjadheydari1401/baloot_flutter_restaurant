@@ -13,14 +13,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: const Color(0xff70e000),
       title: Container(
-        color: Colors.lightBlue,
+        color: const Color(0xff70e000),
         child: Text(
           title,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .headline5!
               .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
