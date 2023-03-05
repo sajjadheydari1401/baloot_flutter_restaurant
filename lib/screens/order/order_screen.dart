@@ -248,52 +248,47 @@ class _OrderScreenState extends State<OrderScreen> {
                                         if (int.parse(_getOrderQty(
                                                 products.items[index].title)) >
                                             0)
-                                          Container(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                IconButton(
-                                                  icon:
-                                                      const Icon(Icons.remove),
-                                                  onPressed: () =>
-                                                      _decreaseOrderQty(products
-                                                          .items[index].title),
-                                                ),
-                                                Container(
-                                                  width: 20,
-                                                  height: 20,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                        color: Colors.black38,
-                                                        blurRadius: 5,
-                                                        offset: Offset(1, 1),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Text(
-                                                    _getOrderQty(products
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.remove),
+                                                onPressed: () =>
+                                                    _decreaseOrderQty(products
                                                         .items[index].title),
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                              ),
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black38,
+                                                      blurRadius: 5,
+                                                      offset: Offset(1, 1),
                                                     ),
+                                                  ],
+                                                ),
+                                                child: Text(
+                                                  _getOrderQty(products
+                                                      .items[index].title),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                IconButton(
-                                                  icon: const Icon(Icons.add),
-                                                  onPressed: () => _addToOrders(
-                                                      products.items[index]),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.add),
+                                                onPressed: () => _addToOrders(
+                                                    products.items[index]),
+                                              ),
+                                            ],
                                           )
                                       ],
                                     ),
@@ -304,13 +299,18 @@ class _OrderScreenState extends State<OrderScreen> {
                           },
                         ),
                       ),
-                      TextField(
-                        controller: _tableNumberController,
-                        textAlign: TextAlign.right,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: ' (اختیاری)  شماره تخت را وارد کنید ',
-                          border: OutlineInputBorder(),
+                      SizedBox(
+                        height: 40,
+                        width: 400,
+                        child: TextField(
+                          controller: _tableNumberController,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            hintText: 'شماره تخت (اختیاری)',
+                            border: UnderlineInputBorder(),
+                            contentPadding: EdgeInsets.only(right: 10),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
