@@ -132,7 +132,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     child: ElevatedButton(
                       onPressed:
                           isFormValid() ? () => _saveProduct(context) : null,
-                      child: const Text('چاپ رسید'),
+                      child: const Text('افزودن محصول'),
                     ),
                   ),
                 ],
