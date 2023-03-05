@@ -187,33 +187,38 @@ class _OrderScreenState extends State<OrderScreen> {
                             vertical: 30.0, horizontal: 50.0),
                         // implement GridView.builder
                         child: GridView.builder(
-                          shrinkWrap:
-                              true, // to allow scrolling inside the GridView
-                          physics:
-                              const NeverScrollableScrollPhysics(), // to disable GridView scrolling
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent:
-                                MediaQuery.of(context).size.width / 5,
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
                             childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
                           ),
                           itemCount: products.items.length,
                           itemBuilder: (BuildContext ctx, index) {
-                            // Calculate the row number based on the item index
-                            int row = index ~/ 5;
+                            // Calculate the width of each item based on available space
+                            final double itemWidth = (MediaQuery.of(context)
+                                            .size
+                                            .width *
+                                        0.8 -
+                                    80 -
+                                    4 * 20 -
+                                    20 * 4) /
+                                5; // 80% of screen width minus 80 pixels of horizontal padding and 4 * 20 pixels of spacing, divided by 5 columns
 
                             // Generate a list of colors to use for each row
-                            List<Color> rowColors = const [
-                              Color(0xfffdfd96),
-                              Color(0xff77dd77),
-                              Color(0xffff6961),
-                              Color(0xff84b6f4),
+                            final List<Color> rowColors = [
+                              const Color(0xfffdfd96),
+                              const Color(0xff77dd77),
+                              const Color(0xffff6961),
+                              const Color(0xff84b6f4),
                             ];
 
-                            // Get the color to use for the current row
-                            Color color = rowColors[row % rowColors.length];
+                            // Get the color to use for the current item
+                            final Color color =
+                                rowColors[index % rowColors.length];
 
                             // Create a Container widget with the appropriate color
                             return GestureDetector(
@@ -221,6 +226,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               child: Column(
                                 children: [
                                   Container(
+                                    width: itemWidth + 30,
                                     height: 110,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -242,47 +248,52 @@ class _OrderScreenState extends State<OrderScreen> {
                                         if (int.parse(_getOrderQty(
                                                 products.items[index].title)) >
                                             0)
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(Icons.remove),
-                                                onPressed: () =>
-                                                    _decreaseOrderQty(products
-                                                        .items[index].title),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black38,
-                                                      blurRadius: 5,
-                                                      offset: Offset(1, 1),
-                                                    ),
-                                                  ],
+                                          Container(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                  icon:
+                                                      const Icon(Icons.remove),
+                                                  onPressed: () =>
+                                                      _decreaseOrderQty(products
+                                                          .items[index].title),
                                                 ),
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                child: Text(
-                                                  '${_getOrderQty(products.items[index].title)}',
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    boxShadow: const [
+                                                      BoxShadow(
+                                                        color: Colors.black38,
+                                                        blurRadius: 5,
+                                                        offset: Offset(1, 1),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Text(
+                                                    _getOrderQty(products
+                                                        .items[index].title),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              IconButton(
-                                                icon: const Icon(Icons.add),
-                                                onPressed: () => _addToOrders(
-                                                    products.items[index]),
-                                              ),
-                                            ],
+                                                IconButton(
+                                                  icon: const Icon(Icons.add),
+                                                  onPressed: () => _addToOrders(
+                                                      products.items[index]),
+                                                ),
+                                              ],
+                                            ),
                                           )
                                       ],
                                     ),
