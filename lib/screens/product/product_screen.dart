@@ -64,7 +64,7 @@ class _ProductScreenState extends State<ProductScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('خطا'),
-          content: const Text('غذایی با این عنوان قبلاً ثبت شده است.'),
+          content: const Text('غذایی با این عنوان قبلاً ثبت شده است'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
@@ -87,7 +87,11 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   bool isFormValid() {
-    return _titleController.text.isNotEmpty && _priceController.text.isNotEmpty;
+    return _titleController.text.isNotEmpty &&
+        _priceController.text.isNotEmpty &&
+        !_priceController.text.startsWith("0") &&
+        !_priceController.text.contains('.') &&
+        !_priceController.text.contains(',');
   }
 
   @override
