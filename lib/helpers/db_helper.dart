@@ -69,6 +69,15 @@ class DBHelper {
     );
   }
 
+  static Future<void> deleteInvoice(String invoiceId) async {
+    final db = await DBHelper.database();
+    await db.delete(
+      'invoices',
+      where: 'id = ?',
+      whereArgs: [invoiceId],
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getData(String table,
       {String? where, List<dynamic>? whereArgs}) async {
     final db = await DBHelper.database();

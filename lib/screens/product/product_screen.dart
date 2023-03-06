@@ -237,6 +237,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         },
                                       );
                                     },
+                                    direction: DismissDirection.endToStart,
                                     onDismissed: (direction) {
                                       _deleteProduct(products.items[index].id);
                                       ScaffoldMessenger.of(context)

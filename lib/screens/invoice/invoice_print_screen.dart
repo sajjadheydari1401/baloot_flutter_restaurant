@@ -79,7 +79,7 @@ class _InvoicePrintScreenState extends State<InvoicePrintScreen> {
             child: Column(
               children: [
                 const Text(
-                  'برای چاپ فاکتور را کمی فشار دهید \n و بعد اپلیکیشن پرینتر خود را انتخاب نمایید',
+                  'برای چاپ، فاکتور را کمی فشار دهید \n و بعد اپلیکیشن پرینتر خود را انتخاب نمایید',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

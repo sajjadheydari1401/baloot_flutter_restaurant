@@ -121,7 +121,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         children: [
           Container(
             margin: const EdgeInsets.only(
-              bottom: 20.0,
+              bottom: 10.0,
             ),
             padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             // color: const Color(0xffccff33),
@@ -263,6 +263,14 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
               ],
             ),
           ),
+          if (invoicesToShow.isNotEmpty)
+            const Text(
+              'برای حذف فاکتور، آیتم را به طرف چپ بکشید',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          const SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: invoicesToShow.isEmpty
                 ? _isLoading
@@ -280,7 +288,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     itemCount: invoicesToShow.length,
                     itemBuilder: (BuildContext context, int index) {
                       final invoice = invoicesToShow[index];
-                      return _buildInvoiceCard(invoice);
+                      return _buildInvoiceCard(
+                          context, invoice, filterInvoices);
                     },
                   ),
           ),
@@ -290,7 +299,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 }
 
-Widget _buildInvoiceCard(Invoice invoice) {
+Widget _buildInvoiceCard(
+    BuildContext context, Invoice invoice, Function filterInvoices) {
   final GlobalKey key = GlobalKey();
 
   final orders = invoice.productTitles.asMap().entries.map((entry) {
@@ -315,10 +325,49 @@ Widget _buildInvoiceCard(Invoice invoice) {
           print('imageBytes is null');
         }
       },
-      child: InvoiceCard(
-        orders: orders,
-        dateTime: invoice.dateTime,
-        tableNumber: invoice.tableNumber ?? 0,
+      child: Dismissible(
+        key: Key(invoice.id),
+        confirmDismiss: (direction) async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('حذف فاکتور'),
+                content: const Text(
+                    'آیا مطمئن هستید که می‌خواهید این فاکتور را حذف کنید؟'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('خیر'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('بله'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) {
+          Provider.of<Invoices>(context, listen: false)
+              .removeInvoice(invoice.id);
+          filterInvoices();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // Then show a snackbar.
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('فاکتور حذف شد'),
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+        child: InvoiceCard(
+          orders: orders,
+          dateTime: invoice.dateTime,
+          tableNumber: invoice.tableNumber ?? 0,
+        ),
       ),
     ),
   );

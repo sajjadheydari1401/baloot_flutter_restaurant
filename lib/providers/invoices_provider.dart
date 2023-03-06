@@ -45,6 +45,16 @@ class Invoices with ChangeNotifier {
     );
   }
 
+  Future<void> removeInvoice(String invoiceId) async {
+    final invoiceIndex =
+        _items.indexWhere((invoice) => invoice.id == invoiceId);
+    if (invoiceIndex >= 0) {
+      _items.removeAt(invoiceIndex);
+      notifyListeners();
+      await DBHelper.deleteInvoice(invoiceId);
+    }
+  }
+
   Future<void> fetchAndSetInvoices() async {
     try {
       final dataList = await DBHelper.getData('invoices');
