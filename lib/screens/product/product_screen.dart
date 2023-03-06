@@ -244,12 +244,16 @@ class _ProductScreenState extends State<ProductScreen> {
                                       onDismissed: (direction) {
                                         _deleteProduct(
                                             products.items[index].id);
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
                                         // Then show a snackbar.
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content:
                                                 Text('${item.title} حذف شد'),
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                           ),
                                         );
                                       },

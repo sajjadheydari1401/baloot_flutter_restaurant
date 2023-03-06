@@ -48,6 +48,7 @@ class _OrderScreenState extends State<OrderScreen> {
       setState(() {
         _isLoading = true;
       });
+      ScaffoldMessenger.of(context).clearSnackBars();
       await Future.wait([
         Provider.of<Products>(context).fetchAndSetProducts(),
         Provider.of<Invoices>(context).fetchAndSetInvoices(),
@@ -132,6 +133,7 @@ class _OrderScreenState extends State<OrderScreen> {
         SnackBar(
           backgroundColor: Colors.green[300],
           content: const Text('فاکتور با موفقیت ساخته شد'),
+          duration: const Duration(milliseconds: 500),
         ),
       );
     } catch (error) {
@@ -139,6 +141,7 @@ class _OrderScreenState extends State<OrderScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('خطا در ساخت فاکتور'),
+          duration: Duration(milliseconds: 500),
         ),
       );
       return;

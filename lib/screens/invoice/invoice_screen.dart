@@ -47,6 +47,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       setState(() {
         _isLoading = true;
       });
+      ScaffoldMessenger.of(context).clearSnackBars();
       Provider.of<Invoices>(context).fetchAndSetInvoices().then((_) {
         setState(() {
           _isLoading = false;
