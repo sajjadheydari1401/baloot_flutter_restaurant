@@ -94,27 +94,33 @@ class InvoiceCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                (tableNumber == 0)
-                    ? const SizedBox()
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    tableNumber == 0
+                        ? const Text(
+                            'بیرون بر',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : Text(
                             replaceFarsiNumber(tableNumber.toString()),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Text(
-                            ': شماره تخت',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                    const Text(
+                      ': شماره تخت',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),

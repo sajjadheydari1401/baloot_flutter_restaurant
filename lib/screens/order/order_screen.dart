@@ -29,6 +29,7 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final _tableNumberController = TextEditingController();
+  bool isDelivery = false;
   final dateTimeFormatter = NumberFormat('00');
   final now = DateTime.now().millisecondsSinceEpoch;
 
@@ -159,6 +160,18 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
       ),
     );
+  }
+
+  bool validatedForm() {
+    if (orders.isNotEmpty &&
+        _tableNumberController.text.trim().isNotEmpty &&
+        _tableNumberController.text.trim() != "0") {
+      return true;
+    } else if (orders.isNotEmpty && isDelivery == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -302,10 +315,35 @@ class _OrderScreenState extends State<OrderScreen> {
                           },
                         ),
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Text(
+                            'بیرون بر',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Checkbox(
+                            value: isDelivery,
+                            onChanged: (bool? value) {
+                              if (value != null &&
+                                  _tableNumberController.text.trim().isEmpty) {
+                                setState(() {
+                                  isDelivery = value;
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 40,
-                        width: 400,
+                        width: 200,
                         child: TextField(
+                          enabled: isDelivery == false,
+                          onChanged: (value) => setState(() {}),
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                           controller: _tableNumberController,
@@ -320,27 +358,23 @@ class _OrderScreenState extends State<OrderScreen> {
                       ),
                       const SizedBox(height: 10),
                       SizedBox(
-                        width: 200,
-                        height: 50,
-                        child: IgnorePointer(
-                          ignoring: orders.isEmpty,
+                          width: 200,
+                          height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff70e000),
                             ),
-                            onPressed: orders.isNotEmpty
-                                ? () => _saveInvoice(
-                                      context,
-                                    )
+                            onPressed: validatedForm()
+                                ? () => _saveInvoice(context)
                                 : null,
                             child: const Text(
                               'چاپ رسید',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
+                          )),
                       const SizedBox(
                         height: 20,
                       ),
@@ -352,7 +386,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               orders: orders,
                               dateTime: DateTime.now().millisecondsSinceEpoch,
                               tableNumber:
-                                  _tableNumberController.text.isNotEmpty
+                                  _tableNumberController.text.trim().isNotEmpty
                                       ? int.parse(_tableNumberController.text)
                                       : 0,
                             ),
