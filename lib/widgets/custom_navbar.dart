@@ -14,6 +14,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     InvoiceScreen(),
+    ProfileScreen(),
     // add more screens here
   ];
 
@@ -36,6 +37,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
         BottomNavigationBarItem(
           icon: Icon(Icons.list),
           label: 'فاکتور ها',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'پروفایل من',
         ),
         // add more items here
       ],

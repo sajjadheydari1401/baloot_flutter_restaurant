@@ -1,5 +1,6 @@
 import 'package:mousavi/providers/invoices_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:mousavi/providers/profiles_provider.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Products()),
         ChangeNotifierProvider.value(value: Invoices()),
+        ChangeNotifierProvider.value(value: Profiles()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

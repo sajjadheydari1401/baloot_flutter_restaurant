@@ -3,3 +3,4 @@ export 'order/order_screen.dart';
 export 'product/product_screen.dart';
 export 'invoice/invoice_screen.dart';
 export 'invoice/invoice_print_screen.dart';
+export 'profile/profile_screen.dart';
