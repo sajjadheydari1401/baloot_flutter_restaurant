@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 String formatPrice(double price) {
-  final format = NumberFormat("#,##0.00", "fa_IR");
+  final format = NumberFormat("#,##0", "fa_IR");
   return format.format(price);
 }
 
