@@ -90,110 +90,112 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: const CustomAppBar(title: 'پروفایل من'),
       bottomNavigationBar: const CustomNavBar(currentTabIndex: 2),
-      body: Center(
-        child: Container(
-          alignment: Alignment.center,
-          width: 400,
-          margin: const EdgeInsets.only(top: 30),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              if (_isLoading)
-                const CircularProgressIndicator()
-              else if (myProfile != null)
-                Form(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 50,
-                        child: TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              _isFormValid = isFormValid();
-                            });
-                          },
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          controller: _titleController,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.name,
-                          decoration: const InputDecoration(
-                            labelText: 'عنوان',
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 50,
-                        child: TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              _isFormValid = isFormValid();
-                            });
-                          },
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          controller: _addressController,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.name,
-                          decoration: const InputDecoration(
-                            labelText: 'آدرس',
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 50,
-                        child: TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              _isFormValid = isFormValid();
-                            });
-                          },
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                          controller: _phoneController,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.name,
-                          decoration: const InputDecoration(
-                            labelText: 'تلفن',
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: 150,
-                        height: 50,
-                        child: IgnorePointer(
-                          ignoring: !isFormValid(),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff70e000),
-                            ),
-                            onPressed: isFormValid()
-                                ? () => _saveProfile(context)
-                                : null,
-                            child: const Text(
-                              'ذخیره پروفایل',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            alignment: Alignment.center,
+            width: 400,
+            margin: const EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              children: [
+                if (_isLoading)
+                  const CircularProgressIndicator()
+                else if (myProfile != null)
+                  Form(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 50,
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                _isFormValid = isFormValid();
+                              });
+                            },
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                            controller: _titleController,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.name,
+                            decoration: const InputDecoration(
+                              labelText: 'عنوان',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                              border: OutlineInputBorder(),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 50,
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                _isFormValid = isFormValid();
+                              });
+                            },
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                            controller: _addressController,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.name,
+                            decoration: const InputDecoration(
+                              labelText: 'آدرس',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 50,
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                _isFormValid = isFormValid();
+                              });
+                            },
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                            controller: _phoneController,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.name,
+                            decoration: const InputDecoration(
+                              labelText: 'تلفن',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: 150,
+                          height: 50,
+                          child: IgnorePointer(
+                            ignoring: !isFormValid(),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff70e000),
+                              ),
+                              onPressed: isFormValid()
+                                  ? () => _saveProfile(context)
+                                  : null,
+                              child: const Text(
+                                'ذخیره پروفایل',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
