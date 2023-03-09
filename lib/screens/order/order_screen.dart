@@ -202,117 +202,95 @@ class _OrderScreenState extends State<OrderScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 30.0, horizontal: 50.0),
                         // implement GridView.builder
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                          ),
-                          itemCount: products.items.length,
-                          itemBuilder: (BuildContext ctx, index) {
-                            // Calculate the width of each item based on available space
-                            final double itemWidth = (MediaQuery.of(context)
-                                            .size
-                                            .width *
-                                        0.8 -
-                                    80 -
-                                    4 * 20 -
-                                    20 * 4) /
-                                5; // 80% of screen width minus 80 pixels of horizontal padding and 4 * 20 pixels of spacing, divided by 5 columns
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 15,
+                          runSpacing: 10,
+                          children: List.generate(
+                            products.items.length,
+                            (index) {
+                              final List<Color> rowColors = [
+                                const Color(0xfffdfd96),
+                                const Color(0xff77dd77),
+                                const Color(0xffff6961),
+                                const Color(0xff84b6f4),
+                              ];
+                              final Color color =
+                                  rowColors[index % rowColors.length];
 
-                            // Generate a list of colors to use for each row
-                            final List<Color> rowColors = [
-                              const Color(0xfffdfd96),
-                              const Color(0xff77dd77),
-                              const Color(0xffff6961),
-                              const Color(0xff84b6f4),
-                            ];
-
-                            // Get the color to use for the current item
-                            final Color color =
-                                rowColors[index % rowColors.length];
-
-                            // Create a Container widget with the appropriate color
-                            return GestureDetector(
-                              onTap: () => _addToOrders(products.items[index]),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: itemWidth + 30,
-                                    height: 110,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: color,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          products.items[index].title,
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        if (int.parse(_getOrderQty(
-                                                products.items[index].title)) >
-                                            0)
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(Icons.remove),
-                                                onPressed: () =>
-                                                    _decreaseOrderQty(products
-                                                        .items[index].title),
-                                              ),
-                                              Container(
-                                                width: 20,
-                                                height: 20,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black38,
-                                                      blurRadius: 5,
-                                                      offset: Offset(1, 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  _getOrderQty(products
-                                                      .items[index].title),
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(Icons.add),
-                                                onPressed: () => _addToOrders(
-                                                    products.items[index]),
-                                              ),
-                                            ],
-                                          )
-                                      ],
-                                    ),
+                              return GestureDetector(
+                                onTap: () =>
+                                    _addToOrders(products.items[index]),
+                                child: Container(
+                                  width: 150,
+                                  height: 110,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
-                                ],
-                              ),
-                            );
-                          },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        products.items[index].title,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      if (int.parse(_getOrderQty(
+                                              products.items[index].title)) >
+                                          0)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.remove),
+                                              onPressed: () =>
+                                                  _decreaseOrderQty(products
+                                                      .items[index].title),
+                                            ),
+                                            Container(
+                                              width: 20,
+                                              height: 20,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Colors.black38,
+                                                    blurRadius: 5,
+                                                    offset: Offset(1, 1),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Text(
+                                                _getOrderQty(products
+                                                    .items[index].title),
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.add),
+                                              onPressed: () => _addToOrders(
+                                                  products.items[index]),
+                                            ),
+                                          ],
+                                        )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       Row(
