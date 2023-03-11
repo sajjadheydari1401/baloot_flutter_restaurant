@@ -57,7 +57,8 @@ class Invoices with ChangeNotifier {
 
   Future<void> fetchAndSetInvoices() async {
     try {
-      final dataList = await DBHelper.getData('invoices');
+      final dataList =
+          await DBHelper.getData('invoices', orderBy: 'datetime DESC');
       final List<Invoice> loadedInvoices = await loadedInvoicesFuture(dataList);
       _items = loadedInvoices;
       notifyListeners();

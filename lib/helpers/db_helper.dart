@@ -95,8 +95,8 @@ class DBHelper {
   }
 
   static Future<List<Map<String, dynamic>>> getData(String table,
-      {String? where, List<dynamic>? whereArgs}) async {
+      {String? where, List<dynamic>? whereArgs, String? orderBy}) async {
     final db = await DBHelper.database();
-    return db.query(table, where: where, whereArgs: whereArgs);
+    return db.query(table, where: where, whereArgs: whereArgs, orderBy: orderBy);
   }
 }

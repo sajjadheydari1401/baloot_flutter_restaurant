@@ -3,7 +3,10 @@
    <application
         android:label="mousavi"
         android:name="${applicationName}"
-        android:icon="@mipmap/logo">
+        android:icon="@mipmap/logo"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
