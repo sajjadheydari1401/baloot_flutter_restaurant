@@ -88,6 +88,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       );
       setState(() {
         toLabel = 'انتخاب تاریخ';
+        invoicesToShow = [];
       });
       return;
     }
