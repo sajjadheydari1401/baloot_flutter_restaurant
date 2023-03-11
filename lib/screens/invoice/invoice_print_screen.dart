@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mousavi/helpers/file.dart';
 import 'package:mousavi/models/models.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
+import 'package:mousavi/providers/profiles_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/widgets.dart';
@@ -38,17 +39,20 @@ class _InvoicePrintScreenState extends State<InvoicePrintScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Invoices>(context).fetchAndSetInvoices().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-        _selectedInvoice = Provider.of<Invoices>(context, listen: false)
-            .findById(widget.selectedInvoiceId);
+      await Future.wait([
+        Provider.of<Invoices>(context).fetchAndSetInvoices().then((_) {
+          _selectedInvoice = Provider.of<Invoices>(context, listen: false)
+              .findById(widget.selectedInvoiceId);
+        }),
+        Provider.of<Profiles>(context).fetchProfile(),
+      ]);
+      setState(() {
+        _isLoading = false;
       });
     }
     _isInit = false;
@@ -57,6 +61,8 @@ class _InvoicePrintScreenState extends State<InvoicePrintScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Profile profile = Provider.of<Profiles>(context, listen: false).profile;
+
     final GlobalKey key = GlobalKey();
 
     final orders = _selectedInvoice.productTitles.asMap().entries.map((entry) {
@@ -104,6 +110,7 @@ class _InvoicePrintScreenState extends State<InvoicePrintScreen> {
                       orders: orders,
                       dateTime: _selectedInvoice.dateTime,
                       tableNumber: _selectedInvoice.tableNumber ?? 0,
+                      profile: profile,
                     ),
                   ),
                 )

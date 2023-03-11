@@ -1,4 +1,3 @@
-import 'package:mousavi/models/models.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;

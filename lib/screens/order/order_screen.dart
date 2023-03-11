@@ -2,6 +2,7 @@ import 'package:mousavi/models/models.dart';
 import 'package:mousavi/models/order_model.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
 import 'package:mousavi/providers/products_provider.dart';
+import 'package:mousavi/providers/profiles_provider.dart';
 import 'package:mousavi/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ class _OrderScreenState extends State<OrderScreen> {
       await Future.wait([
         Provider.of<Products>(context).fetchAndSetProducts(),
         Provider.of<Invoices>(context).fetchAndSetInvoices(),
+        Provider.of<Profiles>(context).fetchProfile(),
       ]);
       setState(() {
         _isLoading = false;
@@ -177,6 +179,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Products>(context);
+    final profile = Provider.of<Profiles>(context, listen: false).profile;
 
     return Scaffold(
       appBar: const CustomAppBar(title: ' ثبت سفارش'),
@@ -367,6 +370,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   _tableNumberController.text.trim().isNotEmpty
                                       ? int.parse(_tableNumberController.text)
                                       : 0,
+                              profile: profile,
                             ),
                     ],
                   ),

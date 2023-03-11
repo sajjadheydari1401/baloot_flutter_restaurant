@@ -1,8 +1,8 @@
 import 'package:mousavi/helpers/file.dart';
 import 'package:mousavi/helpers/format.dart';
-import 'package:mousavi/models/invoice_model.dart';
-import 'package:mousavi/models/order_model.dart';
+import 'package:mousavi/models/models.dart';
 import 'package:mousavi/providers/invoices_provider.dart';
+import 'package:mousavi/providers/profiles_provider.dart';
 import 'package:mousavi/widgets/widgets.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:flutter/material.dart';
@@ -41,17 +41,19 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
       ScaffoldMessenger.of(context).clearSnackBars();
-      Provider.of<Invoices>(context).fetchAndSetInvoices().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
+      await Future.wait([
+        Provider.of<Invoices>(context).fetchAndSetInvoices(),
+        Provider.of<Profiles>(context).fetchProfile(),
+      ]);
+      setState(() {
+        _isLoading = false;
       });
     }
     _isInit = false;
@@ -114,6 +116,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Profile profile = Provider.of<Profiles>(context, listen: false).profile;
+
     return Scaffold(
       appBar: const CustomAppBar(title: 'فاکتورها'),
       bottomNavigationBar: const CustomNavBar(currentTabIndex: 1),
@@ -289,7 +293,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       final invoice = invoicesToShow[index];
                       return _buildInvoiceCard(
-                          context, invoice, filterInvoices);
+                          context, invoice, filterInvoices, profile);
                     },
                   ),
           ),
@@ -299,8 +303,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 }
 
-Widget _buildInvoiceCard(
-    BuildContext context, Invoice invoice, Function filterInvoices) {
+Widget _buildInvoiceCard(BuildContext context, Invoice invoice,
+    Function filterInvoices, Profile profile) {
   final GlobalKey key = GlobalKey();
 
   final orders = invoice.productTitles.asMap().entries.map((entry) {
@@ -367,6 +371,7 @@ Widget _buildInvoiceCard(
           orders: orders,
           dateTime: invoice.dateTime,
           tableNumber: invoice.tableNumber ?? 0,
+          profile: profile,
         ),
       ),
     ),

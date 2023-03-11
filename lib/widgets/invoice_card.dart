@@ -1,21 +1,21 @@
 import 'package:mousavi/helpers/format.dart';
 import 'package:mousavi/models/models.dart';
-import 'package:mousavi/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mousavi/providers/profiles_provider.dart';
-import 'package:provider/provider.dart';
 
 class InvoiceCard extends StatefulWidget {
   final List<Order> orders;
   final int dateTime;
   final int tableNumber;
+  final Profile profile;
 
-  InvoiceCard(
-      {super.key,
-      required this.orders,
-      required this.dateTime,
-      required this.tableNumber});
+  const InvoiceCard({
+    super.key,
+    required this.orders,
+    required this.dateTime,
+    required this.tableNumber,
+    required this.profile,
+  });
 
   @override
   State<InvoiceCard> createState() => _InvoiceCardState();
@@ -24,28 +24,9 @@ class InvoiceCard extends StatefulWidget {
 class _InvoiceCardState extends State<InvoiceCard> {
   final dateTimeFormatter = NumberFormat('00');
 
-  bool _isInit = true;
-  bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Profiles>(context).fetchProfile().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
   }
 
   TableRow _getDataRow(Order order) {
@@ -77,11 +58,7 @@ class _InvoiceCardState extends State<InvoiceCard> {
 
   @override
   Widget build(BuildContext context) {
-    Profile profile = Provider.of<Profiles>(context, listen: false).profile;
-    print(profile);
-    return _isLoading
-        ? const CircularProgressIndicator()
-        : profile == null
+    return widget.profile == null
             ? const Text('')
             : Center(
                 child: SizedBox(
@@ -101,7 +78,7 @@ class _InvoiceCardState extends State<InvoiceCard> {
                               height: 70,
                             ),
                             Text(
-                              profile.title,
+                              widget.profile.title,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -248,7 +225,7 @@ class _InvoiceCardState extends State<InvoiceCard> {
                             ),
                           ),
                           Text(
-                            replaceFarsiNumber(profile.address),
+                            replaceFarsiNumber(widget.profile.address),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -263,7 +240,7 @@ class _InvoiceCardState extends State<InvoiceCard> {
                             ),
                           ),
                           Text(
-                            replaceFarsiNumber(profile.phone),
+                            replaceFarsiNumber(widget.profile.phone),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
