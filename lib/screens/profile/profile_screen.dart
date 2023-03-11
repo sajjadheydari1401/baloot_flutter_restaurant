@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mousavi/models/models.dart';
 import 'package:mousavi/providers/profiles_provider.dart';
+import 'package:mousavi/screens/home/home_screen.dart';
 import 'package:mousavi/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
+  static const String routeName = '/profile';
+
+  static Route route() {
+    return MaterialPageRoute(
+        settings: const RouteSettings(name: routeName),
+        builder: (_) => const ProfileScreen());
+  }
+
   const ProfileScreen({super.key});
 
   @override
@@ -81,6 +90,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         duration: const Duration(milliseconds: 500),
       ),
     );
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => HomeScreen(),
+        ));
   }
 
   @override

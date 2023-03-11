@@ -18,6 +18,8 @@ class AppRouter {
         return ProductScreen.route();
       case InvoiceScreen.routeName:
         return InvoiceScreen.route();
+      case ProfileScreen.routeName:
+        return ProfileScreen.route();
       default:
         return _errorRoute();
     }

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           textTheme: PersianFonts.vazirTextTheme,
         ),
         onGenerateRoute: AppRouter.onGenerateRoute,
-        initialRoute: HomeScreen.routeName,
+        initialRoute: ProfileScreen.routeName,
       ),
     );
   }
